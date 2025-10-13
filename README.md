@@ -55,6 +55,7 @@ awslocal logs filter-log-events ^
 --log-group-name /aws/lambda/your-function ^
 --limit 1000 > result/log/full-events-log.json
 ```
+demo file in /data/full-events-log.json
 
 2️⃣ 啟動 Log Review UI
 啟動前端 UI，瀏覽日誌檔案內容：

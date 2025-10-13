@@ -1,0 +1,423 @@
+{
+    "events": [
+        {
+            "logStreamName": "2025/10/13/[$LATEST]4197d45c5e3c30247985f003b9781cc0",
+            "timestamp": 1760324367423,
+            "message": "START RequestId: cfac4407-cc85-4622-908a-506fc672aad4 Version: $LATEST\n",
+            "ingestionTime": 1760324367604,
+            "eventId": "0"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]4197d45c5e3c30247985f003b9781cc0",
+            "timestamp": 1760324367423,
+            "message": "2025-10-13T02:59:27.407Z\tcfac4407-cc85-4622-908a-506fc672aad4\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760324367604,
+            "eventId": "1"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]4197d45c5e3c30247985f003b9781cc0",
+            "timestamp": 1760324367423,
+            "message": "2025-10-13T02:59:27.416Z\tcfac4407-cc85-4622-908a-506fc672aad4\tERROR\tMySQL Error: Error: connect ECONNREFUSED 127.0.0.1:3306\r    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1555:16) {\r  errno: -111,\r  code: 'ECONNREFUSED',\r  syscall: 'connect',\r  address: '127.0.0.1',\r  port: 3306,\r  fatal: true\r}\n",
+            "ingestionTime": 1760324367604,
+            "eventId": "2"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]4197d45c5e3c30247985f003b9781cc0",
+            "timestamp": 1760324367423,
+            "message": "END RequestId: cfac4407-cc85-4622-908a-506fc672aad4\n",
+            "ingestionTime": 1760324367604,
+            "eventId": "3"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]4197d45c5e3c30247985f003b9781cc0",
+            "timestamp": 1760324367423,
+            "message": "REPORT RequestId: cfac4407-cc85-4622-908a-506fc672aad4\tDuration: 12.15 ms\tBilled Duration: 13 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760324367604,
+            "eventId": "4"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e4d7d107e1023ac629b27a741a1fafa4",
+            "timestamp": 1760324848231,
+            "message": "START RequestId: 06f63fec-1d4d-4d00-a980-ef74d08fa2c0 Version: $LATEST\n",
+            "ingestionTime": 1760324848260,
+            "eventId": "5"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e4d7d107e1023ac629b27a741a1fafa4",
+            "timestamp": 1760324848231,
+            "message": "2025-10-13T03:07:28.137Z\t06f63fec-1d4d-4d00-a980-ef74d08fa2c0\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760324848260,
+            "eventId": "6"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e4d7d107e1023ac629b27a741a1fafa4",
+            "timestamp": 1760324848231,
+            "message": "2025-10-13T03:07:28.222Z\t06f63fec-1d4d-4d00-a980-ef74d08fa2c0\tINFO\tQuery result: [\r  {\r    id: '85f44e1febb94ecd8b6a3cab39f32cb2',\r    createdAt: 2025-06-19T02:18:05.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-19T02:19:11.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: '123@gmail.com',\r    imageUrl: null,\r    firstName: 'Rock',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Tsai',\r    mobilePhone: '',\r    password: '$2a$10$zJORPPrre0xsMkOz6M0cTuuWKWtLFUeSLIK.oYhMBNAo8TI82gime',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-19T02:19:11.000Z,\r    ip: '10.10.25.192',\r    fullName: 'Rock Tsai'\r  },\r  {\r    id: '8a2e685245a54e3b857d367e49315acd',\r    createdAt: 2025-06-20T11:53:09.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-20T11:53:42.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: 'vchen1@actiontec.com',\r    imageUrl: null,\r    firstName: 'Victor',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Chen',\r    mobilePhone: '',\r    password: '$2a$10$uZmzE6j.M4s7GI2MtzuEYOBksLJFZ9ECwxVGsMIu3iL0Af.LfY2Tm',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-20T11:53:42.000Z,\r    ip: 'null',\r    fullName: 'Victor Chen'\r  },\r  {\r    id: 'bdc124f4da284a3396ec283ccc068fcb',\r    createdAt: 2024-12-31T04:02:30.000Z,\r    createdBy: 'SYSTEM',\r    updatedAt: 2024-12-31T04:02:30.000Z,\r    updatedBy: 'SYSTEM',\r    alexaEmail: null,\r    company: 'Actiontec',\r    email: 'admin@actiontec.com',\r    imageUrl: null,\r    firstName: 'Root',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Admin',\r    mobilePhone: null,\r    password: '$2a$10$EGB2kZMqiiWCzo/qZJtVauQQvLZQF3SLCMIuOBnYIVqXo/DRfMp32',\r    title: 'CEO',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: null,\r    ip: '10.10.25.192',\r    fullName: 'Root Admin'\r  },\r  {\r    id: 'fa853da1d71f4f619ec2db18f8cdd55e',\r    createdAt: 2025-06-20T11:53:09.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-20T11:53:42.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: 'rock_tsai2@gmail.com',\r    imageUrl: null,\r    firstName: 'Rock',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Tsai',\r    mobilePhone: '',\r    password: '$2a$10$rl4654wOi93FvEBDh7zgW.7MxAuIEJCu6TagwdKaaqKksaUSyEFg.',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-20T11:53:42.000Z,\r    ip: '10.10.52.64',\r    fullName: 'Rock Tsai'\r  },\r  {\r    id: 'fa853da1d71f4f619ec2db18f8cdd55i',\r    createdAt: 2025-06-20T11:53:09.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-20T11:53:42.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: 'vchen@actiontec.com',\r    imageUrl: null,\r    firstName: 'Victor',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Chen',\r    mobilePhone: '',\r    password: '$2a$10$uR7V84atyTUnC0LN9UbVQOU8FkVgODR3XVDNQiKY2VeZrpJLdtFzC',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-20T11:53:42.000Z,\r    ip: 'null',\r    fullName: 'Victor Chen'\r  }\r]\n",
+            "ingestionTime": 1760324848260,
+            "eventId": "7"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e4d7d107e1023ac629b27a741a1fafa4",
+            "timestamp": 1760324848231,
+            "message": "END RequestId: 06f63fec-1d4d-4d00-a980-ef74d08fa2c0\n",
+            "ingestionTime": 1760324848260,
+            "eventId": "8"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e4d7d107e1023ac629b27a741a1fafa4",
+            "timestamp": 1760324848231,
+            "message": "REPORT RequestId: 06f63fec-1d4d-4d00-a980-ef74d08fa2c0\tDuration: 88.12 ms\tBilled Duration: 89 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760324848260,
+            "eventId": "9"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "timestamp": 1760326006654,
+            "message": "START RequestId: 8a877bcd-a2ae-4f74-8909-af8282ad2472 Version: $LATEST\n",
+            "ingestionTime": 1760326006690,
+            "eventId": "10"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "timestamp": 1760326006654,
+            "message": "2025-10-13T03:26:46.609Z\t8a877bcd-a2ae-4f74-8909-af8282ad2472\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760326006690,
+            "eventId": "11"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "timestamp": 1760326006654,
+            "message": "2025-10-13T03:26:46.646Z\t8a877bcd-a2ae-4f74-8909-af8282ad2472\tINFO\tQuery result: [\r  {\r    id: '85f44e1febb94ecd8b6a3cab39f32cb2',\r    createdAt: 2025-06-19T02:18:05.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-19T02:19:11.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: '123@gmail.com',\r    imageUrl: null,\r    firstName: 'Rock',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Tsai',\r    mobilePhone: '',\r    password: '$2a$10$zJORPPrre0xsMkOz6M0cTuuWKWtLFUeSLIK.oYhMBNAo8TI82gime',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-19T02:19:11.000Z,\r    ip: '10.10.25.192',\r    fullName: 'Rock Tsai'\r  },\r  {\r    id: '8a2e685245a54e3b857d367e49315acd',\r    createdAt: 2025-06-20T11:53:09.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-20T11:53:42.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: 'vchen1@actiontec.com',\r    imageUrl: null,\r    firstName: 'Victor',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Chen',\r    mobilePhone: '',\r    password: '$2a$10$uZmzE6j.M4s7GI2MtzuEYOBksLJFZ9ECwxVGsMIu3iL0Af.LfY2Tm',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-20T11:53:42.000Z,\r    ip: 'null',\r    fullName: 'Victor Chen'\r  },\r  {\r    id: 'bdc124f4da284a3396ec283ccc068fcb',\r    createdAt: 2024-12-31T04:02:30.000Z,\r    createdBy: 'SYSTEM',\r    updatedAt: 2024-12-31T04:02:30.000Z,\r    updatedBy: 'SYSTEM',\r    alexaEmail: null,\r    company: 'Actiontec',\r    email: 'admin@actiontec.com',\r    imageUrl: null,\r    firstName: 'Root',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Admin',\r    mobilePhone: null,\r    password: '$2a$10$EGB2kZMqiiWCzo/qZJtVauQQvLZQF3SLCMIuOBnYIVqXo/DRfMp32',\r    title: 'CEO',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: null,\r    ip: '10.10.25.192',\r    fullName: 'Root Admin'\r  },\r  {\r    id: 'fa853da1d71f4f619ec2db18f8cdd55e',\r    createdAt: 2025-06-20T11:53:09.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-20T11:53:42.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: 'rock_tsai2@gmail.com',\r    imageUrl: null,\r    firstName: 'Rock',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Tsai',\r    mobilePhone: '',\r    password: '$2a$10$rl4654wOi93FvEBDh7zgW.7MxAuIEJCu6TagwdKaaqKksaUSyEFg.',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-20T11:53:42.000Z,\r    ip: '10.10.52.64',\r    fullName: 'Rock Tsai'\r  },\r  {\r    id: 'fa853da1d71f4f619ec2db18f8cdd55i',\r    createdAt: 2025-06-20T11:53:09.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-20T11:53:42.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: 'vchen@actiontec.com',\r    imageUrl: null,\r    firstName: 'Victor',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Chen',\r    mobilePhone: '',\r    password: '$2a$10$uR7V84atyTUnC0LN9UbVQOU8FkVgODR3XVDNQiKY2VeZrpJLdtFzC',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-20T11:53:42.000Z,\r    ip: 'null',\r    fullName: 'Victor Chen'\r  }\r]\n",
+            "ingestionTime": 1760326006690,
+            "eventId": "12"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "timestamp": 1760326006654,
+            "message": "END RequestId: 8a877bcd-a2ae-4f74-8909-af8282ad2472\n",
+            "ingestionTime": 1760326006690,
+            "eventId": "13"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "timestamp": 1760326006654,
+            "message": "REPORT RequestId: 8a877bcd-a2ae-4f74-8909-af8282ad2472\tDuration: 40.66 ms\tBilled Duration: 41 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760326006690,
+            "eventId": "14"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "timestamp": 1760326025172,
+            "message": "START RequestId: 963efd7d-12f1-4882-9064-11279f80c4bd Version: $LATEST\n",
+            "ingestionTime": 1760326025178,
+            "eventId": "15"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "timestamp": 1760326025172,
+            "message": "2025-10-13T03:27:05.162Z\t963efd7d-12f1-4882-9064-11279f80c4bd\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760326025178,
+            "eventId": "16"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "timestamp": 1760326025172,
+            "message": "2025-10-13T03:27:05.165Z\t963efd7d-12f1-4882-9064-11279f80c4bd\tINFO\tQuery result: [\r  {\r    id: '85f44e1febb94ecd8b6a3cab39f32cb2',\r    createdAt: 2025-06-19T02:18:05.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-19T02:19:11.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: '123@gmail.com',\r    imageUrl: null,\r    firstName: 'Rock',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Tsai',\r    mobilePhone: '',\r    password: '$2a$10$zJORPPrre0xsMkOz6M0cTuuWKWtLFUeSLIK.oYhMBNAo8TI82gime',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-19T02:19:11.000Z,\r    ip: '10.10.25.192',\r    fullName: 'Rock Tsai'\r  },\r  {\r    id: '8a2e685245a54e3b857d367e49315acd',\r    createdAt: 2025-06-20T11:53:09.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-20T11:53:42.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: 'vchen1@actiontec.com',\r    imageUrl: null,\r    firstName: 'Victor',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Chen',\r    mobilePhone: '',\r    password: '$2a$10$uZmzE6j.M4s7GI2MtzuEYOBksLJFZ9ECwxVGsMIu3iL0Af.LfY2Tm',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-20T11:53:42.000Z,\r    ip: 'null',\r    fullName: 'Victor Chen'\r  },\r  {\r    id: 'bdc124f4da284a3396ec283ccc068fcb',\r    createdAt: 2024-12-31T04:02:30.000Z,\r    createdBy: 'SYSTEM',\r    updatedAt: 2024-12-31T04:02:30.000Z,\r    updatedBy: 'SYSTEM',\r    alexaEmail: null,\r    company: 'Actiontec',\r    email: 'admin@actiontec.com',\r    imageUrl: null,\r    firstName: 'Root',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Admin',\r    mobilePhone: null,\r    password: '$2a$10$EGB2kZMqiiWCzo/qZJtVauQQvLZQF3SLCMIuOBnYIVqXo/DRfMp32',\r    title: 'CEO',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: null,\r    ip: '10.10.25.192',\r    fullName: 'Root Admin'\r  },\r  {\r    id: 'fa853da1d71f4f619ec2db18f8cdd55e',\r    createdAt: 2025-06-20T11:53:09.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-20T11:53:42.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: 'rock_tsai2@gmail.com',\r    imageUrl: null,\r    firstName: 'Rock',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Tsai',\r    mobilePhone: '',\r    password: '$2a$10$rl4654wOi93FvEBDh7zgW.7MxAuIEJCu6TagwdKaaqKksaUSyEFg.',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-20T11:53:42.000Z,\r    ip: '10.10.52.64',\r    fullName: 'Rock Tsai'\r  },\r  {\r    id: 'fa853da1d71f4f619ec2db18f8cdd55i',\r    createdAt: 2025-06-20T11:53:09.000Z,\r    createdBy: '82876d5931534b6daf87efc5cd6d097d',\r    updatedAt: 2025-06-20T11:53:42.000Z,\r    updatedBy: '82876d5931534b6daf87efc5cd6d097d',\r    alexaEmail: null,\r    company: '',\r    email: 'vchen@actiontec.com',\r    imageUrl: null,\r    firstName: 'Victor',\r    gender: 'MALE',\r    googleHomeEmail: null,\r    internalUser: 1,\r    isAccountNonExpired: 0,\r    isAccountNonLocked: 0,\r    isCredNonExpired: 0,\r    isEnabled: 0,\r    lastName: 'Chen',\r    mobilePhone: '',\r    password: '$2a$10$uR7V84atyTUnC0LN9UbVQOU8FkVgODR3XVDNQiKY2VeZrpJLdtFzC',\r    title: 'INTERNAL',\r    verify: 1,\r    skipEmailVerification: 1,\r    passwordAttempt: 0,\r    passwordUpdatedAt: 2025-06-20T11:53:42.000Z,\r    ip: 'null',\r    fullName: 'Victor Chen'\r  }\r]\n",
+            "ingestionTime": 1760326025178,
+            "eventId": "17"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "timestamp": 1760326025172,
+            "message": "END RequestId: 963efd7d-12f1-4882-9064-11279f80c4bd\n",
+            "ingestionTime": 1760326025178,
+            "eventId": "18"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "timestamp": 1760326025172,
+            "message": "REPORT RequestId: 963efd7d-12f1-4882-9064-11279f80c4bd\tDuration: 3.95 ms\tBilled Duration: 4 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760326025178,
+            "eventId": "19"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326110292,
+            "message": "START RequestId: 619ee6ab-eb7c-4009-bf4e-2a6f5048bc67 Version: $LATEST\n",
+            "ingestionTime": 1760326110322,
+            "eventId": "20"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326110292,
+            "message": "2025-10-13T03:28:30.256Z\t619ee6ab-eb7c-4009-bf4e-2a6f5048bc67\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760326110322,
+            "eventId": "21"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326110292,
+            "message": "2025-10-13T03:28:30.283Z\t619ee6ab-eb7c-4009-bf4e-2a6f5048bc67\tERROR\tMySQL Error: Error: Table 'actiontec.users' doesn't exist\r    at PromisePoolConnection.query (/var/task/node_modules/mysql2/lib/promise/connection.js:29:22)\r    at getAllUsers (/var/task/db/db.js:24:41)\r    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\r    at async Runtime.hello [as handler] (/var/task/handler.js:8:5) {\r  code: 'ER_NO_SUCH_TABLE',\r  errno: 1146,\r  sql: 'SELECT * FROM users',\r  sqlState: '42S02',\r  sqlMessage: \"Table 'actiontec.users' doesn't exist\"\r}\n",
+            "ingestionTime": 1760326110322,
+            "eventId": "22"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326110292,
+            "message": "END RequestId: 619ee6ab-eb7c-4009-bf4e-2a6f5048bc67\n",
+            "ingestionTime": 1760326110322,
+            "eventId": "23"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326110292,
+            "message": "REPORT RequestId: 619ee6ab-eb7c-4009-bf4e-2a6f5048bc67\tDuration: 30.13 ms\tBilled Duration: 31 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760326110322,
+            "eventId": "24"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326131894,
+            "message": "START RequestId: a28c759b-5986-45f2-9663-94d49f13f738 Version: $LATEST\n",
+            "ingestionTime": 1760326131897,
+            "eventId": "25"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326131894,
+            "message": "2025-10-13T03:28:51.880Z\ta28c759b-5986-45f2-9663-94d49f13f738\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760326131897,
+            "eventId": "26"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326131894,
+            "message": "2025-10-13T03:28:51.888Z\ta28c759b-5986-45f2-9663-94d49f13f738\tERROR\tMySQL Error: Error: Table 'actiontec.users' doesn't exist\r    at PromisePoolConnection.query (/var/task/node_modules/mysql2/lib/promise/connection.js:29:22)\r    at getAllUsers (/var/task/db/db.js:24:41)\r    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\r    at async Runtime.hello [as handler] (/var/task/handler.js:8:5) {\r  code: 'ER_NO_SUCH_TABLE',\r  errno: 1146,\r  sql: 'SELECT * FROM users',\r  sqlState: '42S02',\r  sqlMessage: \"Table 'actiontec.users' doesn't exist\"\r}\n",
+            "ingestionTime": 1760326131897,
+            "eventId": "27"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326131894,
+            "message": "END RequestId: a28c759b-5986-45f2-9663-94d49f13f738\n",
+            "ingestionTime": 1760326131897,
+            "eventId": "28"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326131894,
+            "message": "REPORT RequestId: a28c759b-5986-45f2-9663-94d49f13f738\tDuration: 9.12 ms\tBilled Duration: 10 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760326131897,
+            "eventId": "29"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326165765,
+            "message": "START RequestId: 03c65a6b-e023-4df0-9dfe-48045ab54c9c Version: $LATEST\n",
+            "ingestionTime": 1760326165770,
+            "eventId": "30"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326165765,
+            "message": "2025-10-13T03:29:25.754Z\t03c65a6b-e023-4df0-9dfe-48045ab54c9c\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760326165770,
+            "eventId": "31"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326165765,
+            "message": "2025-10-13T03:29:25.760Z\t03c65a6b-e023-4df0-9dfe-48045ab54c9c\tERROR\tMySQL Error: Error: Table 'actiontec.users' doesn't exist\r    at PromisePoolConnection.query (/var/task/node_modules/mysql2/lib/promise/connection.js:29:22)\r    at getAllUsers (/var/task/db/db.js:24:41)\r    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\r    at async Runtime.hello [as handler] (/var/task/handler.js:8:5) {\r  code: 'ER_NO_SUCH_TABLE',\r  errno: 1146,\r  sql: 'SELECT * FROM users',\r  sqlState: '42S02',\r  sqlMessage: \"Table 'actiontec.users' doesn't exist\"\r}\n",
+            "ingestionTime": 1760326165770,
+            "eventId": "32"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326165765,
+            "message": "END RequestId: 03c65a6b-e023-4df0-9dfe-48045ab54c9c\n",
+            "ingestionTime": 1760326165770,
+            "eventId": "33"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "timestamp": 1760326165765,
+            "message": "REPORT RequestId: 03c65a6b-e023-4df0-9dfe-48045ab54c9c\tDuration: 7.43 ms\tBilled Duration: 8 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760326165770,
+            "eventId": "34"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e43b97878fc5344bec732516c63b2ddb",
+            "timestamp": 1760326230928,
+            "message": "START RequestId: 095a70e1-242f-4cbb-bcc7-29340a7e2069 Version: $LATEST\n",
+            "ingestionTime": 1760326230956,
+            "eventId": "35"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e43b97878fc5344bec732516c63b2ddb",
+            "timestamp": 1760326230928,
+            "message": "2025-10-13T03:30:30.894Z\t095a70e1-242f-4cbb-bcc7-29340a7e2069\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760326230956,
+            "eventId": "36"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e43b97878fc5344bec732516c63b2ddb",
+            "timestamp": 1760326230928,
+            "message": "2025-10-13T03:30:30.920Z\t095a70e1-242f-4cbb-bcc7-29340a7e2069\tINFO\tQuery result: [\r  {\r    id: 1,\r    username: 'user1',\r    password: '$2a$10$J68RgPmv7uyYTdNkRgyfXuh6yfOHKYBNGkOoLEB27ZXWMQqajTqCa',\r    enabled: 1,\r    created_at: 2025-09-30T14:40:39.000Z,\r    updated_at: 2025-09-30T15:43:04.000Z\r  },\r  {\r    id: 2,\r    username: 'admin',\r    password: '$2a$10$J68RgPmv7uyYTdNkRgyfXuh6yfOHKYBNGkOoLEB27ZXWMQqajTqCa',\r    enabled: 1,\r    created_at: 2025-09-30T14:40:41.000Z,\r    updated_at: 2025-09-30T15:43:04.000Z\r  },\r  {\r    id: 3,\r    username: 'user2',\r    password: '$2a$10$naTVrrxG4NBzQ0opaMRuquerbkRIUuQuUz48hYOOpDTJ3UPNwKAEe',\r    enabled: 1,\r    created_at: 2025-09-30T16:07:13.000Z,\r    updated_at: 2025-09-30T16:07:13.000Z\r  }\r]\n",
+            "ingestionTime": 1760326230956,
+            "eventId": "37"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e43b97878fc5344bec732516c63b2ddb",
+            "timestamp": 1760326230928,
+            "message": "END RequestId: 095a70e1-242f-4cbb-bcc7-29340a7e2069\n",
+            "ingestionTime": 1760326230956,
+            "eventId": "38"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e43b97878fc5344bec732516c63b2ddb",
+            "timestamp": 1760326230928,
+            "message": "REPORT RequestId: 095a70e1-242f-4cbb-bcc7-29340a7e2069\tDuration: 31.49 ms\tBilled Duration: 32 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760326230956,
+            "eventId": "39"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]5b1a5a61341da06fa6c9b126e3988f56",
+            "timestamp": 1760327022994,
+            "message": "START RequestId: d3195408-612b-40f3-b04d-f053023190ec Version: $LATEST\n",
+            "ingestionTime": 1760327023019,
+            "eventId": "40"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]5b1a5a61341da06fa6c9b126e3988f56",
+            "timestamp": 1760327022994,
+            "message": "2025-10-13T03:43:42.963Z\td3195408-612b-40f3-b04d-f053023190ec\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760327023019,
+            "eventId": "41"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]5b1a5a61341da06fa6c9b126e3988f56",
+            "timestamp": 1760327022994,
+            "message": "2025-10-13T03:43:42.988Z\td3195408-612b-40f3-b04d-f053023190ec\tINFO\tQuery result: [\r  {\r    id: 1,\r    username: 'user1',\r    password: '$2a$10$J68RgPmv7uyYTdNkRgyfXuh6yfOHKYBNGkOoLEB27ZXWMQqajTqCa',\r    enabled: 1,\r    created_at: 2025-09-30T14:40:39.000Z,\r    updated_at: 2025-09-30T15:43:04.000Z\r  },\r  {\r    id: 2,\r    username: 'admin',\r    password: '$2a$10$J68RgPmv7uyYTdNkRgyfXuh6yfOHKYBNGkOoLEB27ZXWMQqajTqCa',\r    enabled: 1,\r    created_at: 2025-09-30T14:40:41.000Z,\r    updated_at: 2025-09-30T15:43:04.000Z\r  },\r  {\r    id: 3,\r    username: 'user2',\r    password: '$2a$10$naTVrrxG4NBzQ0opaMRuquerbkRIUuQuUz48hYOOpDTJ3UPNwKAEe',\r    enabled: 1,\r    created_at: 2025-09-30T16:07:13.000Z,\r    updated_at: 2025-09-30T16:07:13.000Z\r  }\r]\n",
+            "ingestionTime": 1760327023019,
+            "eventId": "42"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]5b1a5a61341da06fa6c9b126e3988f56",
+            "timestamp": 1760327022994,
+            "message": "END RequestId: d3195408-612b-40f3-b04d-f053023190ec\n",
+            "ingestionTime": 1760327023019,
+            "eventId": "43"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]5b1a5a61341da06fa6c9b126e3988f56",
+            "timestamp": 1760327022994,
+            "message": "REPORT RequestId: d3195408-612b-40f3-b04d-f053023190ec\tDuration: 28.33 ms\tBilled Duration: 29 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760327023019,
+            "eventId": "44"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]502bd7bb252816561ace2529c0413120",
+            "timestamp": 1760334414049,
+            "message": "START RequestId: 1fee7c0c-bb6b-4f1e-8233-d2a95d3dcc5f Version: $LATEST\n",
+            "ingestionTime": 1760334414079,
+            "eventId": "45"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]502bd7bb252816561ace2529c0413120",
+            "timestamp": 1760334414049,
+            "message": "2025-10-13T05:46:54.014Z\t1fee7c0c-bb6b-4f1e-8233-d2a95d3dcc5f\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760334414079,
+            "eventId": "46"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]502bd7bb252816561ace2529c0413120",
+            "timestamp": 1760334414049,
+            "message": "2025-10-13T05:46:54.044Z\t1fee7c0c-bb6b-4f1e-8233-d2a95d3dcc5f\tINFO\tQuery result: [\r  {\r    id: 1,\r    username: 'user1',\r    password: '$2a$10$J68RgPmv7uyYTdNkRgyfXuh6yfOHKYBNGkOoLEB27ZXWMQqajTqCa',\r    enabled: 1,\r    created_at: 2025-09-30T14:40:39.000Z,\r    updated_at: 2025-09-30T15:43:04.000Z\r  },\r  {\r    id: 2,\r    username: 'admin',\r    password: '$2a$10$J68RgPmv7uyYTdNkRgyfXuh6yfOHKYBNGkOoLEB27ZXWMQqajTqCa',\r    enabled: 1,\r    created_at: 2025-09-30T14:40:41.000Z,\r    updated_at: 2025-09-30T15:43:04.000Z\r  },\r  {\r    id: 3,\r    username: 'user2',\r    password: '$2a$10$naTVrrxG4NBzQ0opaMRuquerbkRIUuQuUz48hYOOpDTJ3UPNwKAEe',\r    enabled: 1,\r    created_at: 2025-09-30T16:07:13.000Z,\r    updated_at: 2025-09-30T16:07:13.000Z\r  }\r]\n",
+            "ingestionTime": 1760334414079,
+            "eventId": "47"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]502bd7bb252816561ace2529c0413120",
+            "timestamp": 1760334414049,
+            "message": "END RequestId: 1fee7c0c-bb6b-4f1e-8233-d2a95d3dcc5f\n",
+            "ingestionTime": 1760334414079,
+            "eventId": "48"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]502bd7bb252816561ace2529c0413120",
+            "timestamp": 1760334414049,
+            "message": "REPORT RequestId: 1fee7c0c-bb6b-4f1e-8233-d2a95d3dcc5f\tDuration: 32.79 ms\tBilled Duration: 33 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760334414079,
+            "eventId": "49"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]85421228362544178c287ccd478baa2a",
+            "timestamp": 1760335793707,
+            "message": "START RequestId: 35a878fd-ef5a-49ec-8eca-77df0e14e2b8 Version: $LATEST\n",
+            "ingestionTime": 1760335793738,
+            "eventId": "50"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]85421228362544178c287ccd478baa2a",
+            "timestamp": 1760335793707,
+            "message": "2025-10-13T06:09:53.665Z\t35a878fd-ef5a-49ec-8eca-77df0e14e2b8\tINFO\tEvent: { body: { num1: '10', num2: '10' } }\n",
+            "ingestionTime": 1760335793738,
+            "eventId": "51"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]85421228362544178c287ccd478baa2a",
+            "timestamp": 1760335793707,
+            "message": "2025-10-13T06:09:53.699Z\t35a878fd-ef5a-49ec-8eca-77df0e14e2b8\tINFO\tQuery result: [\r  {\r    id: 1,\r    username: 'user1',\r    password: '$2a$10$J68RgPmv7uyYTdNkRgyfXuh6yfOHKYBNGkOoLEB27ZXWMQqajTqCa',\r    enabled: 1,\r    created_at: 2025-09-30T14:40:39.000Z,\r    updated_at: 2025-09-30T15:43:04.000Z\r  },\r  {\r    id: 2,\r    username: 'admin',\r    password: '$2a$10$J68RgPmv7uyYTdNkRgyfXuh6yfOHKYBNGkOoLEB27ZXWMQqajTqCa',\r    enabled: 1,\r    created_at: 2025-09-30T14:40:41.000Z,\r    updated_at: 2025-09-30T15:43:04.000Z\r  },\r  {\r    id: 3,\r    username: 'user2',\r    password: '$2a$10$naTVrrxG4NBzQ0opaMRuquerbkRIUuQuUz48hYOOpDTJ3UPNwKAEe',\r    enabled: 1,\r    created_at: 2025-09-30T16:07:13.000Z,\r    updated_at: 2025-09-30T16:07:13.000Z\r  }\r]\n",
+            "ingestionTime": 1760335793738,
+            "eventId": "52"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]85421228362544178c287ccd478baa2a",
+            "timestamp": 1760335793707,
+            "message": "END RequestId: 35a878fd-ef5a-49ec-8eca-77df0e14e2b8\n",
+            "ingestionTime": 1760335793738,
+            "eventId": "53"
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]85421228362544178c287ccd478baa2a",
+            "timestamp": 1760335793707,
+            "message": "REPORT RequestId: 35a878fd-ef5a-49ec-8eca-77df0e14e2b8\tDuration: 38.52 ms\tBilled Duration: 39 ms\tMemory Size: 128 MB\tMax Memory Used: 128 MB\t\n",
+            "ingestionTime": 1760335793738,
+            "eventId": "54"
+        }
+    ],
+    "searchedLogStreams": [
+        {
+            "logStreamName": "2025/10/13/[$LATEST]4197d45c5e3c30247985f003b9781cc0",
+            "searchedCompletely": true
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e4d7d107e1023ac629b27a741a1fafa4",
+            "searchedCompletely": true
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]8e3781ce076d0ebbab0be38e01f7bc84",
+            "searchedCompletely": true
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]a705d0c8d40dc35036703303b7c038a7",
+            "searchedCompletely": true
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]e43b97878fc5344bec732516c63b2ddb",
+            "searchedCompletely": true
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]5b1a5a61341da06fa6c9b126e3988f56",
+            "searchedCompletely": true
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]502bd7bb252816561ace2529c0413120",
+            "searchedCompletely": true
+        },
+        {
+            "logStreamName": "2025/10/13/[$LATEST]85421228362544178c287ccd478baa2a",
+            "searchedCompletely": true
+        }
+    ]
+}
