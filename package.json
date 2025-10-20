@@ -1,5 +1,5 @@
 {
-  "name": "aws-log-previews",
+  "name": "my-v0-project",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,14 +10,16 @@
   },
   "dependencies": {
     "@emotion/cache": "latest",
-    "@emotion/react": "latest",
+    "@emotion/react": "^11.13.3",
     "@emotion/server": "latest",
-    "@emotion/styled": "latest",
+    "@emotion/styled": "^11.13.0",
     "@hookform/resolvers": "^3.10.0",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
     "@mui/material-pigment-css": "latest",
+    "@mui/x-charts": "^7.18.0",
+    "@mui/x-date-pickers": "^7.18.0",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
     "@radix-ui/react-aspect-ratio": "1.1.1",

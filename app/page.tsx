@@ -4,6 +4,7 @@ import { useState } from "react"
 import DashboardLayout from "@/components/dashboard-layout"
 import Overview from "@/components/overview"
 import LogReviewer from "@/components/log-reviewer"
+import ApiLogViewer from "@/components/api-log-viewer"
 import AnalyticsDashboard from "@/components/analytics-dashboard"
 import VersionLog from "@/components/version-log"
 import type { LogEntry } from "@/lib/log-parser"
@@ -18,6 +19,8 @@ export default function Home() {
         return <Overview logs={logs} />
       case "Log Reviewer":
         return <LogReviewer logs={logs} setLogs={setLogs} />
+      case "API Log Viewer":
+        return <ApiLogViewer />
       case "Analytics":
         return <AnalyticsDashboard logs={logs} />
       case "Version Log":

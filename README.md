@@ -86,3 +86,7 @@ npm run start
 ![analytics](./img/analytics.png)
 
 ![version-log](./img/version-log.png)
+
+![api-log-viewer](./img/api-log-viewer1.png)
+
+![api-log-viewer](./img/api-log-viewer2.png)

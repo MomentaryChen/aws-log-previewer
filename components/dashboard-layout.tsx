@@ -26,6 +26,7 @@ import {
   Settings as SettingsIcon,
   FiberManualRecord as FiberManualRecordIcon,
   History as HistoryIcon,
+  Api as ApiIcon,
 } from "@mui/icons-material"
 
 interface DashboardLayoutProps {
@@ -39,6 +40,7 @@ const drawerWidth = 260
 const navigation = [
   { name: "Overview", icon: DashboardIcon },
   { name: "Log Reviewer", icon: DescriptionIcon },
+  { name: "API Log Viewer", icon: ApiIcon },
   { name: "Analytics", icon: BarChartIcon },
   { name: "Version Log", icon: HistoryIcon },
   { name: "Settings", icon: SettingsIcon },

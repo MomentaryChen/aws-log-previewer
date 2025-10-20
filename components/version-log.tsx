@@ -22,6 +22,26 @@ interface Version {
 
 const versionHistory: Version[] = [
   {
+    version: "1.6.0",
+    date: "2025-10-20",
+    changes: [
+      { type: "feature", description: "新增 K8s Dashboard API 日誌查詢功能" },
+      { type: "feature", description: "實現代理 API 支援 GET 請求" },
+      { type: "feature", description: "添加詳細的日誌查詢參數配置 UI" },
+      { type: "feature", description: "實現日誌級別檢測和過濾功能" },
+      { type: "feature", description: "添加關鍵字過濾和時間範圍過濾" },
+      { type: "feature", description: "實現懶加載和無限滾動功能" },
+      { type: "feature", description: "添加相對時間預設選項（24h/6h/1h/30m/15m/5m）" },
+      { type: "improvement", description: "優化日誌級別檢測邏輯，支援 [INFO] [WARN] [ERROR] 格式" },
+      { type: "improvement", description: "實現多行異常日誌分組功能" },
+      { type: "improvement", description: "添加認證 Cookie 本地儲存功能" },
+      { type: "improvement", description: "實現關鍵字過濾防抖動機制（1秒延遲）" },
+      { type: "fix", description: "修復 SSR 水合錯誤問題" },
+      { type: "fix", description: "修復非 JSON 響應處理問題" },
+      { type: "fix", description: "修復空過濾結果時版面消失問題" },
+    ],
+  },
+  {
     version: "1.5.0",
     date: "2025-10-13",
     changes: [
