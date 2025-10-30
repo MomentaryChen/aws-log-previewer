@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import DashboardLayout from "@/components/dashboard-layout"
 import Overview from "@/components/overview"
 import LogReviewer from "@/components/log-reviewer"
@@ -12,6 +13,22 @@ import type { LogEntry } from "@/lib/log-parser"
 export default function Home() {
   const [currentPage, setCurrentPage] = useState("Overview")
   const [logs, setLogs] = useState<LogEntry[]>([])
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const tab = searchParams.get("tab")
+    if (tab) {
+      setCurrentPage(tab)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (currentPage === "K8s") {
+      router.push("/k8s/deployments")
+    }
+  }, [currentPage, router])
 
   const renderPage = () => {
     switch (currentPage) {

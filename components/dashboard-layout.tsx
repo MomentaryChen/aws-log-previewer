@@ -41,6 +41,7 @@ const navigation = [
   { name: "Overview", icon: DashboardIcon },
   { name: "Log Reviewer", icon: DescriptionIcon },
   { name: "API Log Viewer", icon: ApiIcon },
+  { name: "K8s", icon: ApiIcon },
   { name: "Analytics", icon: BarChartIcon },
   { name: "Version Log", icon: HistoryIcon },
   { name: "Settings", icon: SettingsIcon },

@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
+import { useSearchParams } from "next/navigation"
 import {
   Box,
   Card,
@@ -18,6 +19,7 @@ import {
 import { CloudDownload, Info, Schedule, Storage } from "@mui/icons-material"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
 import type { LogEntry } from "@/lib/log-parser"
+import { buildListNamespacesUrl, buildListPodsUrl, buildPodContainersUrl } from "@/lib/k8s-admin"
 
 interface ApiLogResponse {
   info: {
@@ -44,14 +46,29 @@ interface ApiLogResponse {
 }
 
 export default function ApiLogViewer() {
-  const [baseUrl, setBaseUrl] = useState("https://k8s-dashboard.example.com/api/v1/log/<namespace>/<pod>/<container>")
-  const [authToken, setAuthToken] = useState("")
+  const [baseUrl, setBaseUrl] = useState(`/api/k8s/api/v1/log/<namespace>/<pod>/<container>`) 
+  const DEFAULT_AUTH = process.env.NEXT_PUBLIC_K8S_LOG_AUTH || ""
+  const [authToken, setAuthToken] = useState(DEFAULT_AUTH)
   const [logFilePosition, setLogFilePosition] = useState("end")
-  const [referenceTimestamp, setReferenceTimestamp] = useState("2025-10-20T06:26:23.103435625Z")
+  const [referenceTimestamp, setReferenceTimestamp] = useState("newest")
   const [referenceLineNum, setReferenceLineNum] = useState("-1")
   const [offsetFrom, setOffsetFrom] = useState("0")
   const [offsetTo, setOffsetTo] = useState("5000")
   const [previous, setPrevious] = useState(false)
+  const [stepSize, setStepSize] = useState("4096")
+  const [tailMode, setTailMode] = useState(false)
+  const [pollIntervalMs, setPollIntervalMs] = useState("3000")
+  const [namespace, setNamespace] = useState("")
+  const [pod, setPod] = useState("")
+  const [container, setContainer] = useState("")
+  const [namespaces, setNamespaces] = useState<string[]>([])
+  const [pods, setPods] = useState<Array<{ name: string; obj: any }>>([])
+  const [containers, setContainers] = useState<string[]>([])
+  const [nsLoading, setNsLoading] = useState(false)
+  const [podLoading, setPodLoading] = useState(false)
+  const [containerLoading, setContainerLoading] = useState(false)
+  const [podLoadError, setPodLoadError] = useState<string | null>(null)
+  const [containerLoadError, setContainerLoadError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [apiResponse, setApiResponse] = useState<ApiLogResponse | null>(null)
@@ -63,10 +80,13 @@ export default function ApiLogViewer() {
   const [displayedLogs, setDisplayedLogs] = useState<LogEntry[]>([])
   const [loadMore, setLoadMore] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const logContainerRef = useRef<HTMLDivElement | null>(null)
   const [debouncedKeyword, setDebouncedKeyword] = useState<string>("")
   const [startTime, setStartTime] = useState<string>("")
   const [endTime, setEndTime] = useState<string>("")
   const [relativeRange, setRelativeRange] = useState<string>("30m")
+  const searchParams = useSearchParams()
+  const USE_K8S_PROXY = true
 
   // 將Date格式化為 datetime-local 可用字串 (yyyy-MM-ddTHH:mm)
   const formatForInput = (date: Date) => {
@@ -100,6 +120,154 @@ export default function ApiLogViewer() {
     // 初始套用相對時間 30m
     applyRelativeRange("30m")
   }, [])
+
+  // 從 URL 讀取 ns/pod/container 並預填
+  useEffect(() => {
+    if (!searchParams) return
+    const ns = searchParams.get("ns") || ""
+    const p = searchParams.get("pod") || ""
+    const c = searchParams.get("container") || ""
+    if (ns) setNamespace(ns)
+    if (p) setPod(p)
+    if (c) setContainer(c)
+    if (ns && p && c) {
+      setBaseUrl(`/api/k8s/api/v1/log/${encodeURIComponent(ns)}/${encodeURIComponent(p)}/${encodeURIComponent(c)}`)
+    }
+  }, [searchParams])
+
+  // 載入 Namespaces
+  useEffect(() => {
+    const loadNamespaces = async () => {
+      setNsLoading(true)
+      try {
+        const res = await fetch(buildListNamespacesUrl(), { cache: "no-store" })
+        if (res.ok) {
+          const body: any = await res.json()
+          const items: string[] = (body?.namespaces ?? body?.items ?? [])
+            .map((n: any) => n?.objectMeta?.name || n?.metadata?.name)
+            .filter(Boolean)
+          setNamespaces(items)
+          // 若目前 namespace 空或不在清單，預設第一個
+          if (items.length > 0 && (!namespace || !items.includes(namespace))) {
+            setNamespace(items[0])
+          }
+        }
+      } catch {}
+      finally {
+        setNsLoading(false)
+      }
+    }
+    loadNamespaces()
+    // 僅在初始化時載入一次
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // 載入 Pods（依 namespace）
+  useEffect(() => {
+    if (!namespace) {
+      setPods([])
+      setPod("")
+      setContainers([])
+      setContainer("")
+      return
+    }
+    const loadPods = async () => {
+      setPodLoading(true)
+      setPodLoadError(null)
+      try {
+        const url = buildListPodsUrl({ 
+          namespace, 
+          page: 1, 
+          itemsPerPage: 100, 
+          sortBy: "d,creationTimestamp" 
+        })
+        const res = await fetch(url, { cache: "no-store" })
+        if (res.ok) {
+          const body: any = await res.json()
+          // 支援多種可能的數據結構
+          const podObjs: any[] = (body?.pods ?? body?.items ?? body?.data?.pods ?? body?.data?.items ?? [])
+          const items: Array<{ name: string; obj: any }> = podObjs
+            .map((p: any) => ({
+              name: p?.objectMeta?.name || p?.metadata?.name || p?.name,
+              obj: p,
+            }))
+            .filter((x) => Boolean(x.name))
+          setPods(items)
+          // 若目前 pod 空或不在清單，預設第一個
+          if (items.length > 0 && (!pod || !items.some((x) => x.name === pod))) {
+            const first = items[0]
+            setPod(first.name)
+            // 容器將通過專用 API 端點自動載入
+          }
+        } else {
+          setPods([])
+          setPodLoadError(`載入 pods 失敗：${res.status}`)
+        }
+      } catch (e) {
+        setPods([])
+        setPodLoadError(`載入 pods 發生錯誤：${e instanceof Error ? e.message : String(e)}`)
+      } finally {
+        setPodLoading(false)
+      }
+    }
+    loadPods()
+  }, [namespace])
+
+  // 載入 Containers（依 pod）- 從專用 API 端點獲取容器信息
+  useEffect(() => {
+    setContainerLoadError(null)
+    if (!namespace || !pod) {
+      setContainers([])
+      setContainer("")
+      return
+    }
+    
+    const loadContainers = async () => {
+      setContainerLoading(true)
+      try {
+        const url = buildPodContainersUrl(namespace, pod)
+        const res = await fetch(url, { cache: "no-store" })
+        if (res.ok) {
+          const body: any = await res.json()
+          // 支援多種可能的數據結構
+          const cs: string[] = (
+            body?.containers ||
+            body?.containerNames ||
+            body?.data?.containers ||
+            body?.data?.containerNames ||
+            body?.items ||
+            []
+          )
+            .map((c: any) => {
+              // 容器可能是字串或物件
+              if (typeof c === 'string') return c
+              return c?.name || c?.containerName || c?.container || null
+            })
+            .filter(Boolean)
+          
+          if (cs.length > 0) {
+            setContainers(cs)
+            if (!container || !cs.includes(container)) {
+              setContainer(cs[0])
+            }
+          } else {
+            setContainers([])
+            setContainerLoadError(`API 返回的容器列表為空`)
+          }
+        } else {
+          setContainers([])
+          setContainerLoadError(`載入容器失敗：${res.status} ${res.statusText}`)
+        }
+      } catch (e) {
+        setContainers([])
+        setContainerLoadError(`載入容器發生錯誤：${e instanceof Error ? e.message : String(e)}`)
+      } finally {
+        setContainerLoading(false)
+      }
+    }
+    
+    loadContainers()
+  }, [namespace, pod])
 
   // 过滤日志函数
   const applyFilters = (logsToFilter: LogEntry[]) => {
@@ -163,6 +331,100 @@ export default function ApiLogViewer() {
   const handleLoadMore = () => {
     setLoadMore(true)
   }
+  const scrollToBottom = () => {
+    const el = logContainerRef.current
+    if (el) {
+      el.scrollTop = el.scrollHeight
+    }
+  }
+  const jumpToNow = async () => {
+    setLogFilePosition("end")
+    setReferenceTimestamp("newest")
+    setReferenceLineNum("0")
+    setPrevious(false)
+    const step = Math.max(1, parseInt(stepSize || "4096", 10))
+    setOffsetFrom("0")
+    setOffsetTo(String(step))
+    await handleFetchLogs()
+    scrollToBottom()
+  }
+  async function handleResponseParsing(response: Response) {
+    // 按content-type解析
+    const contentType = response.headers.get("content-type") || ""
+    if (contentType.includes("application/json")) {
+      const data: ApiLogResponse = await response.json()
+      setApiResponse(data)
+
+      // 轉換API日誌格式為系統LogEntry格式，將沒有級別標識的日誌歸類到最靠近的有級別日誌
+      const convertedLogs: LogEntry[] = []
+      let currentLevel = "INFO"
+
+      for (let i = 0; i < data.logs.length; i++) {
+        const log = data.logs[i]
+        const content = log.content
+        let level = currentLevel
+
+        if (content.includes('[ERROR]') || content.includes('[error]') || content.includes('[ERROR ]') || content.includes('[error ]')) {
+          level = "ERROR"
+          currentLevel = "ERROR"
+        } else if (content.includes('[WARN]') || content.includes('[warn]') || content.includes('[WARN ]') || content.includes('[warn ]')) {
+          level = "WARN"
+          currentLevel = "WARN"
+        } else if (content.includes('[DEBUG]') || content.includes('[debug]') || content.includes('[DEBUG ]') || content.includes('[debug ]')) {
+          level = "DEBUG"
+          currentLevel = "DEBUG"
+        } else if (content.includes('[INFO]') || content.includes('[info]') || content.includes('[INFO ]') || content.includes('[info ]')) {
+          level = "INFO"
+          currentLevel = "INFO"
+        } else if (content.includes('[FATAL]') || content.includes('[fatal]') || content.includes('[FATAL ]') || content.includes('[fatal ]')) {
+          level = "ERROR"
+          currentLevel = "ERROR"
+        } else if (content.includes('[TRACE]') || content.includes('[trace]') || content.includes('[TRACE ]') || content.includes('[trace ]')) {
+          level = "DEBUG"
+          currentLevel = "DEBUG"
+        }
+
+        convertedLogs.push({
+          timestamp: log.timestamp,
+          level,
+          message: log.content,
+          source: data.info.containerName,
+          metadata: {
+            podName: data.info.podName,
+            containerName: data.info.containerName,
+          },
+        })
+      }
+
+      setLogs(convertedLogs)
+      setFilteredLogs(applyFilters(convertedLogs))
+      if (tailMode) {
+        try {
+          const step = Math.max(1, parseInt(stepSize || "4096", 10))
+          const nextFrom = Math.max(0, parseInt(offsetTo || "0", 10))
+          const nextTo = nextFrom + step
+          setOffsetFrom(String(nextFrom))
+          setOffsetTo(String(nextTo))
+        } catch {}
+      }
+    } else {
+      // 不是JSON时，直接展示原始文本
+      const raw = await response.text()
+      setApiResponse(null)
+      const rawLogs = [
+        {
+          timestamp: new Date().toISOString(),
+          level: "INFO",
+          message: raw,
+          source: "raw",
+          metadata: {},
+        } as unknown as LogEntry,
+      ]
+      setLogs(rawLogs)
+      setFilteredLogs(applyFilters(rawLogs))
+    }
+  }
+
 
   // 滚动到底部自动加载更多
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -175,114 +437,44 @@ export default function ApiLogViewer() {
   }
 
   const handleFetchLogs = async () => {
-    if (!baseUrl.trim()) {
-      setError("請輸入基礎URL")
+    // 需要必填 namespace/pod/container，直接以此組裝 URL
+    if (!namespace || !pod || !container) {
+      setError("請先輸入 Namespace、Pod、Container 後再查詢")
       return
     }
+
+    const finalBaseUrl = `/api/k8s/api/v1/log/${encodeURIComponent(namespace)}/${encodeURIComponent(pod)}/${encodeURIComponent(container)}`
+    setBaseUrl(finalBaseUrl)
 
     setLoading(true)
     setError(null)
 
     try {
-      // 構建完整的API URL
-      const apiUrl = new URL(baseUrl)
-      apiUrl.searchParams.set("logFilePosition", logFilePosition)
-      apiUrl.searchParams.set("referenceTimestamp", referenceTimestamp)
-      apiUrl.searchParams.set("referenceLineNum", referenceLineNum)
-      apiUrl.searchParams.set("offsetFrom", offsetFrom)
-      apiUrl.searchParams.set("offsetTo", offsetTo)
-      apiUrl.searchParams.set("previous", previous.toString())
-
-      // 使用代理API進行GET請求
       const baseOrigin = typeof window !== 'undefined' ? window.location.origin : ''
-      const proxyUrl = new URL("/api/logs", baseOrigin)
-      proxyUrl.searchParams.set("apiUrl", apiUrl.toString())
-      if (authToken.trim()) {
-        try {
-          localStorage.setItem('apiLogAuthCookie', authToken)
-        } catch {}
-        proxyUrl.searchParams.set("authToken", authToken)
-      }
 
-      const response = await fetch(proxyUrl.toString(), {
-        method: "GET",
-      })
+      // 構建完整的API URL（一律走同源 K8S 代理）
+        const fullUrl = new URL(
+          finalBaseUrl.startsWith("/") ? `${baseOrigin}${finalBaseUrl}` : finalBaseUrl
+        )
+        fullUrl.searchParams.set("logFilePosition", logFilePosition)
+        fullUrl.searchParams.set("referenceTimestamp", referenceTimestamp)
+        fullUrl.searchParams.set("referenceLineNum", referenceLineNum)
+        fullUrl.searchParams.set("offsetFrom", offsetFrom)
+        fullUrl.searchParams.set("offsetTo", offsetTo)
+        fullUrl.searchParams.set("previous", previous.toString())
 
-      if (!response.ok) {
-        // 非200也尝试读文本以便显示错误页面内容
-        const errText = await response.text()
-        throw new Error(`API請求失敗: ${response.status} ${response.statusText}\n${errText}`)
-      }
-
-      // 按content-type解析
-      const contentType = response.headers.get("content-type") || ""
-      if (contentType.includes("application/json")) {
-        const data: ApiLogResponse = await response.json()
-        setApiResponse(data)
-
-        // 轉換API日誌格式為系統LogEntry格式，將沒有級別標識的日誌歸類到最靠近的有級別日誌
-        const convertedLogs: LogEntry[] = []
-        let currentLevel = "INFO" // 當前級別，默認為INFO
-        
-        for (let i = 0; i < data.logs.length; i++) {
-          const log = data.logs[i]
-          const content = log.content
-          let level = currentLevel // 使用當前級別
-          
-          // 檢查是否有明確的級別標識
-          if (content.includes('[ERROR]') || content.includes('[error]') || content.includes('[ERROR ]') || content.includes('[error ]')) {
-            level = "ERROR"
-            currentLevel = "ERROR" // 更新當前級別
-          } else if (content.includes('[WARN]') || content.includes('[warn]') || content.includes('[WARN ]') || content.includes('[warn ]')) {
-            level = "WARN"
-            currentLevel = "WARN" // 更新當前級別
-          } else if (content.includes('[DEBUG]') || content.includes('[debug]') || content.includes('[DEBUG ]') || content.includes('[debug ]')) {
-            level = "DEBUG"
-            currentLevel = "DEBUG" // 更新當前級別
-          } else if (content.includes('[INFO]') || content.includes('[info]') || content.includes('[INFO ]') || content.includes('[info ]')) {
-            level = "INFO"
-            currentLevel = "INFO" // 更新當前級別
-          } else if (content.includes('[FATAL]') || content.includes('[fatal]') || content.includes('[FATAL ]') || content.includes('[fatal ]')) {
-            level = "ERROR"
-            currentLevel = "ERROR" // 更新當前級別
-          } else if (content.includes('[TRACE]') || content.includes('[trace]') || content.includes('[TRACE ]') || content.includes('[trace ]')) {
-            level = "DEBUG"
-            currentLevel = "DEBUG" // 更新當前級別
-          }
-          // 如果沒有明確級別標識，使用當前級別（歸類到最靠近的有級別日誌）
-
-          convertedLogs.push({
-            timestamp: log.timestamp,
-            level,
-            message: log.content,
-            source: data.info.containerName,
-            metadata: {
-              podName: data.info.podName,
-              containerName: data.info.containerName,
-            },
-          })
+        const response = await fetch(fullUrl.toString(), { method: "GET" })
+        if (!response.ok) {
+          const errText = await response.text()
+          let hint = ""
+          if (response.status === 401 || response.status === 403) hint = "\n提示：請確認服務端 K8S_ADMIN_COOKIE 是否有效。"
+          if (response.status === 416) hint = "\n提示：offset 範圍不合法，請調整 offsetFrom/offsetTo 或步進大小。"
+          if (response.status === 429) hint = "\n提示：請求過於頻繁，請降低輪詢頻率。"
+          throw new Error(`API請求失敗: ${response.status} ${response.statusText}\n${errText}${hint}`)
         }
-
-        setLogs(convertedLogs)
-        // 立即应用过滤
-        setFilteredLogs(applyFilters(convertedLogs))
-      } else {
-        // 不是JSON时，直接展示原始文本
-        const raw = await response.text()
-        setApiResponse(null)
-        const rawLogs = [
-          {
-            timestamp: new Date().toISOString(),
-            level: "INFO",
-            message: raw,
-            source: "raw",
-            metadata: {},
-          } as unknown as LogEntry,
-        ]
-        setLogs(rawLogs)
-        // 立即应用过滤
-        setFilteredLogs(applyFilters(rawLogs))
-      }
+        await handleResponseParsing(response)
+      
+      
 
     } catch (err) {
       setError(err instanceof Error ? err.message : "未知錯誤")
@@ -294,13 +486,47 @@ export default function ApiLogViewer() {
     }
   }
 
-  // 初始化時從localStorage恢復Cookie
-  useEffect(() => {
+  // 上一段/下一段：依步進調整 offset
+  const jumpByStep = (direction: "prev" | "next") => {
     try {
-      const saved = localStorage.getItem('apiLogAuthCookie')
-      if (saved) setAuthToken(saved)
+      const step = Math.max(1, parseInt(stepSize || "4096", 10))
+      const from = Math.max(0, parseInt(offsetFrom || "0", 10))
+      const to = Math.max(from, parseInt(offsetTo || "0", 10))
+      const width = Math.max(1, to - from)
+      const delta = step || width
+      const currentPage = Math.max(1, Math.floor(to / (delta)))
+      const targetPage = direction === "next" ? currentPage + 1 : Math.max(1, currentPage - 1)
+      const newFrom = (targetPage - 1) * delta
+      const newTo = newFrom + delta
+      setOffsetFrom(String(newFrom))
+      setOffsetTo(String(newTo))
     } catch {}
-  }, [])
+  }
+
+  const jumpToPage = (pageNumber: number) => {
+    try {
+      const step = Math.max(1, parseInt(stepSize || "4096", 10))
+      const p = Math.max(1, Math.floor(pageNumber))
+      const newFrom = (p - 1) * step
+      const newTo = newFrom + step
+      setOffsetFrom(String(newFrom))
+      setOffsetTo(String(newTo))
+    } catch {}
+  }
+
+  // 追尾輪詢
+  useEffect(() => {
+    if (!tailMode) return
+    const ms = Math.max(1000, parseInt(pollIntervalMs || "3000", 10))
+    const id = setInterval(() => {
+      if (!loading) {
+        handleFetchLogs()
+      }
+    }, ms)
+    return () => clearInterval(id)
+  }, [tailMode, pollIntervalMs, offsetFrom, offsetTo, stepSize, logFilePosition, referenceTimestamp, referenceLineNum, previous, authToken, baseUrl, namespace, pod, container, loading])
+
+  // 環境變數已提供 Token，移除 localStorage 回填
 
   const handleExport = () => {
     if (!apiResponse) return
@@ -334,34 +560,77 @@ export default function ApiLogViewer() {
             K8s Dashboard API 日誌查詢
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            輸入 K8s Dashboard 的日誌 API URL 與認證 Cookie 後查詢日誌，例如：
-            https://k8s-dashboard.example.com/api/v1/log/namespace/pod/container
+            自動帶入 K8s Dashboard 的日誌 API URL 與認證 Cookie 後查詢日誌
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            {/* Namespace / Pod / Container 快速拼接（下拉選單） */}
+            <Grid item xs={12} md={4}>
               <TextField
                 fullWidth
-                label="基礎URL"
-                placeholder="https://k8s-admin-beta.optimportal.com/api/v1/log/..."
-                value={baseUrl}
-                onChange={(e) => setBaseUrl(e.target.value)}
-                disabled={loading}
-                helperText="Kubernetes日誌API的基礎URL"
-              />
+                select
+                label="Namespace"
+                value={namespace}
+                onChange={(e) => {
+                  setNamespace(e.target.value)
+                  // 切換 namespace 時清空下游
+                  setPod("")
+                  setContainer("")
+                }}
+                disabled={loading || nsLoading}
+                SelectProps={{ native: true }}
+                helperText={nsLoading ? "載入 namespaces..." : undefined}
+              >
+                <option value="" disabled>
+                  選擇 Namespace
+                </option>
+                {(namespaces.length > 0 ? namespaces : (namespace ? [namespace] : [])).map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </TextField>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={4}>
               <TextField
                 fullWidth
-                label="認證Token (Cookie)"
-                placeholder="alpha-globalAccessToken=...; beta-globalAccessToken=..."
-                value={authToken}
-                onChange={(e) => setAuthToken(e.target.value)}
-                disabled={loading}
-                multiline
-                rows={2}
-              />
+                select
+                label="Pod"
+                value={pod}
+                onChange={(e) => {
+                  setPod(e.target.value)
+                  setContainer("")
+                }}
+                disabled={loading || podLoading || !namespace}
+                SelectProps={{ native: true }}
+                helperText={podLoading ? `載入 ${namespace} pods...` : (podLoadError || undefined)}
+              >
+                <option value="" disabled>
+                  {namespace ? `選擇 ${namespace} 的 Pod` : "請先選擇 Namespace"}
+                </option>
+                {(pods.length > 0 ? pods.map((x) => x.name) : (pod ? [pod] : [])).map((p) => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </TextField>
             </Grid>
+            <Grid item xs={12} md={4}>
+              <TextField
+                fullWidth
+                select
+                label="Container"
+                value={container}
+                onChange={(e) => setContainer(e.target.value)}
+                disabled={loading || containerLoading || !pod}
+                SelectProps={{ native: true }}
+                helperText={containerLoading ? `載入 ${pod} containers...` : (containerLoadError || undefined)}
+              >
+                <option value="" disabled>
+                  {pod ? `選擇 ${pod} 的 Container` : "請先選擇 Pod"}
+                </option>
+                {(containers.length > 0 ? containers : (container ? [container] : [])).map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </TextField>
+            </Grid>
+            {/* 隱藏：基礎URL 與 認證Token 由環境變數提供，不顯示於 UI */}
             
             <Grid item xs={12}>
               <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
@@ -427,6 +696,18 @@ export default function ApiLogViewer() {
                 type="number"
               />
             </Grid>
+
+            <Grid item xs={12} md={4}>
+              <TextField
+                fullWidth
+                label="步進大小 (bytes)"
+                value={stepSize}
+                onChange={(e) => setStepSize(e.target.value)}
+                disabled={loading}
+                type="number"
+                helperText="上一段/下一段時使用；預設 4096"
+              />
+            </Grid>
             
             <Grid item xs={12}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -440,12 +721,75 @@ export default function ApiLogViewer() {
                 <label htmlFor="previous">向前查詢 (previous)</label>
               </Box>
             </Grid>
+
+            <Grid item xs={12}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
+                <Button variant="outlined" onClick={() => jumpByStep("prev")} disabled={loading}>
+                  上一段
+                </Button>
+                <Button variant="outlined" onClick={() => jumpByStep("next")} disabled={loading}>
+                  下一段
+                </Button>
+                <TextField
+                  size="small"
+                  label="頁碼"
+                  type="number"
+                  inputProps={{ min: 1 }}
+                  sx={{ width: 120 }}
+                  value={(() => {
+                    try {
+                      const step = Math.max(1, parseInt(stepSize || "4096", 10))
+                      const to = Math.max(0, parseInt(offsetTo || "0", 10))
+                      const page = Math.max(1, Math.ceil(to / step))
+                      return page
+                    } catch {
+                      return 1
+                    }
+                  })()}
+                  onChange={(e) => {
+                    const v = parseInt(e.target.value || "1", 10)
+                    if (!Number.isNaN(v)) jumpToPage(v)
+                  }}
+                  disabled={loading}
+                  helperText="以步進大小為頁寬"
+                />
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <input
+                    type="checkbox"
+                    id="tailMode"
+                    checked={tailMode}
+                    onChange={(e) => {
+                      const enabled = e.target.checked
+                      setTailMode(enabled)
+                      if (enabled) {
+                        setLogFilePosition("end")
+                        setReferenceTimestamp("newest")
+                        setPrevious(false)
+                      }
+                    }}
+                    disabled={loading}
+                  />
+                  <label htmlFor="tailMode">追尾模式</label>
+                </Box>
+                {tailMode && (
+                  <TextField
+                    size="small"
+                    label="輪詢(ms)"
+                    type="number"
+                    value={pollIntervalMs}
+                    onChange={(e) => setPollIntervalMs(e.target.value)}
+                    disabled={loading}
+                    sx={{ width: 140 }}
+                  />
+                )}
+              </Box>
+            </Grid>
             
             <Grid item xs={12}>
               <Button
                 variant="contained"
                 onClick={handleFetchLogs}
-                disabled={loading || !baseUrl.trim()}
+                disabled={loading || !(namespace && pod && container)}
                 startIcon={loading ? <CircularProgress size={20} /> : <CloudDownload />}
                 size="large"
                 fullWidth
@@ -474,7 +818,12 @@ export default function ApiLogViewer() {
                 >
                   {mounted ? (() => {
                     try {
-                      const url = new URL(baseUrl)
+                      const origin = typeof window !== 'undefined' ? window.location.origin : ''
+                      if (!(namespace && pod && container)) {
+                        return "請先輸入 Namespace / Pod / Container"
+                      }
+                      const preview = `${origin}/api/k8s/api/v1/log/${encodeURIComponent(namespace)}/${encodeURIComponent(pod)}/${encodeURIComponent(container)}`
+                      const url = new URL(preview)
                       url.searchParams.set("logFilePosition", logFilePosition)
                       url.searchParams.set("referenceTimestamp", referenceTimestamp)
                       url.searchParams.set("referenceLineNum", referenceLineNum)
@@ -562,6 +911,8 @@ export default function ApiLogViewer() {
                     size="small"
                   />
                   <Chip icon={<Schedule />} label={`位置: ${apiResponse.selection.logFilePosition}`} size="small" />
+                  <Chip label={`offsetFrom: ${apiResponse.selection.offsetFrom}`} size="small" />
+                  <Chip label={`offsetTo: ${apiResponse.selection.offsetTo}`} size="small" />
                   {apiResponse.info.truncated && <Chip label="已截斷" color="warning" size="small" />}
                 </Box>
               </Grid>
@@ -578,7 +929,18 @@ export default function ApiLogViewer() {
             <Typography variant="h6">
               日誌內容 ({displayedLogs.length} / {filteredLogs.length} 條)
             </Typography>
-              <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}>
+              <Box
+                sx={{
+                  display: "grid",
+                  gap: 2,
+                  alignItems: "center",
+                  gridTemplateColumns: {
+                    xs: "1fr",
+                    sm: "1fr 1fr",
+                    md: "110px 180px 180px minmax(220px, 1fr) 140px auto",
+                  },
+                }}
+              >
                 <TextField
                   size="small"
                   select
@@ -590,7 +952,6 @@ export default function ApiLogViewer() {
                     applyRelativeRange(val)
                   }}
                   SelectProps={{ native: true }}
-                  sx={{ minWidth: 110 }}
                 >
                   <option value="24h">24h</option>
                   <option value="6h">6h</option>
@@ -606,7 +967,6 @@ export default function ApiLogViewer() {
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
                   disabled={loading}
-                  sx={{ minWidth: 180 }}
                   InputLabelProps={{ shrink: true }}
                 />
                 <TextField
@@ -616,7 +976,6 @@ export default function ApiLogViewer() {
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
                   disabled={loading}
-                  sx={{ minWidth: 180 }}
                   InputLabelProps={{ shrink: true }}
                 />
                 <TextField
@@ -626,7 +985,6 @@ export default function ApiLogViewer() {
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                   disabled={loading}
-                  sx={{ minWidth: 200 }}
                   helperText={keyword !== debouncedKeyword ? "正在處理..." : ""}
                 />
                 <TextField
@@ -637,7 +995,6 @@ export default function ApiLogViewer() {
                   onChange={(e) => setLevelFilter(e.target.value)}
                   SelectProps={{ native: true }}
                   disabled={loading}
-                  sx={{ minWidth: 120 }}
                 >
                   <option value="ALL">ALL</option>
                   <option value="ERROR">ERROR</option>
@@ -645,21 +1002,27 @@ export default function ApiLogViewer() {
                   <option value="INFO">INFO</option>
                   <option value="DEBUG">DEBUG</option>
                 </TextField>
-                {(startTime || endTime) && (
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    onClick={() => {
-                      setStartTime("")
-                      setEndTime("")
-                      setRelativeRange("30m")
-                      applyRelativeRange("30m")
-                    }}
-                    sx={{ minWidth: 80 }}
-                  >
-                    清除時間
+                <Box>
+                  {(startTime || endTime) && (
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => {
+                        setStartTime("")
+                        setEndTime("")
+                        setRelativeRange("30m")
+                        applyRelativeRange("30m")
+                      }}
+                    >
+                      清除時間
+                    </Button>
+                  )}
+                </Box>
+                <Box>
+                  <Button size="small" variant="contained" onClick={jumpToNow} disabled={loading}>
+                    拉到現在
                   </Button>
-                )}
+                </Box>
               </Box>
             </Box>
             <Divider sx={{ mb: 2 }} />
@@ -667,6 +1030,7 @@ export default function ApiLogViewer() {
             <Box 
               sx={{ maxHeight: "calc(100vh - 400px)", overflow: "auto" }}
               onScroll={handleScroll}
+              ref={logContainerRef}
             >
               {displayedLogs.length > 0 ? (
                 displayedLogs.map((log, index) => (
