@@ -106,4 +106,6 @@ The application includes the following pages:
 
 ![api-log-viewer](./img/api-log-viewer2.png)
 
-![k8s-deployments](./img/k8s-deployments.png)
+![k8s-deployments](./img/k8s-admin-deployment.png)
+
+![k8s-deployments](./img/k8s-admin-pod.png)
