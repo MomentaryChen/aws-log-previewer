@@ -1,0 +1,121 @@
+export interface VersionChange {
+  type: "feature" | "fix" | "improvement" | "breaking"
+  description: string
+}
+
+export interface Version {
+  version: string
+  date: string
+  changes: VersionChange[]
+}
+
+export interface VersionData {
+  currentVersion: string
+  lastUpdated: string
+  versionHistory: Version[]
+}
+
+export const versionData: VersionData = {
+  currentVersion: "2.0.0",
+  lastUpdated: "2025-10-30",
+  versionHistory: [
+    {
+      version: "2.0.0",
+      date: "2025-10-30",
+      changes: [
+        { type: "feature", description: "新增 K8s Dashboard API 日誌查詢功能" },
+        { type: "feature", description: "實現 K8s Deployments 頁面，支援查看 Pods 和容器日誌" },
+        { type: "feature", description: "添加 Namespace、Pod、Container 下拉選單，透過 API 自動載入" },
+        { type: "improvement", description: "重構版本管理系統，將版本數據提取到獨立文件（lib/version-data.ts）" },
+        { type: "improvement", description: "創建版本數據共享機制，支援 JSON 格式版本文件（.version）" },
+        { type: "improvement", description: "改進版本日誌組件的可維護性和代碼組織結構" },
+        { type: "improvement", description: "實現版本數據同步機制，確保版本信息一致性" },
+      ],
+    },
+    {
+      version: "1.6.0",
+      date: "2025-10-20",
+      changes: [
+        { type: "feature", description: "實現代理 API 支援 GET 請求" },
+        { type: "feature", description: "添加詳細的日誌查詢參數配置 UI" },
+        { type: "feature", description: "實現日誌級別檢測和過濾功能" },
+        { type: "feature", description: "添加關鍵字過濾和時間範圍過濾" },
+        { type: "feature", description: "實現懶加載和無限滾動功能" },
+        { type: "feature", description: "添加相對時間預設選項（24h/6h/1h/30m/15m/5m/1m）" },
+        { type: "improvement", description: "優化日誌級別檢測邏輯，支援 [INFO] [WARN] [ERROR] 格式" },
+        { type: "improvement", description: "實現多行異常日誌分組功能" },
+        { type: "improvement", description: "添加認證 Cookie 本地儲存功能" },
+        { type: "improvement", description: "實現關鍵字過濾防抖動機制（1秒延遲）" },
+        { type: "improvement", description: "優化下拉選單載入邏輯，支援從專用 API 獲取容器列表" },
+        { type: "fix", description: "修復 SSR 水合錯誤問題" },
+        { type: "fix", description: "修復非 JSON 響應處理問題" },
+        { type: "fix", description: "修復空過濾結果時版面消失問題" },
+      ],
+    },
+    {
+      version: "1.5.0",
+      date: "2025-10-13",
+      changes: [
+        { type: "improvement", description: "調整統計卡片間距，提升視覺美觀度" },
+        { type: "improvement", description: "優化Log Reviewer頁面統計卡片滿版布局" },
+        { type: "improvement", description: "將導出和清除按鈕移至右上角，統計卡片獨占整行" },
+      ],
+    },
+    {
+      version: "1.4.0",
+      date: "2025-10-13",
+      changes: [
+        { type: "feature", description: "遷移到Material UI設計系統" },
+        { type: "improvement", description: "創建深色主題配置" },
+        { type: "improvement", description: "重構Dashboard布局使用MUI組件" },
+      ],
+    },
+    {
+      version: "1.3.0",
+      date: "2025-10-13",
+      changes: [
+        { type: "feature", description: "添加高級日志功能：正則表達式搜索" },
+        { type: "feature", description: "添加日期時間範圍過濾" },
+        { type: "feature", description: "添加按文件來源過濾" },
+        { type: "feature", description: "添加多格式導出（JSON/CSV/TXT）" },
+        { type: "feature", description: "添加日志書簽標記功能" },
+        { type: "feature", description: "添加一鍵複製日志內容" },
+      ],
+    },
+    {
+      version: "1.2.0",
+      date: "2025-10-13",
+      changes: [
+        { type: "feature", description: "創建Analytics分析頁面" },
+        { type: "feature", description: "添加多種圖表分析：統計卡片、餅圖、柱狀圖、折線圖" },
+        { type: "improvement", description: "改進分析圖表UI/UX和顏色方案" },
+        { type: "improvement", description: "使用漸變背景和模糊效果的現代化卡片設計" },
+      ],
+    },
+    {
+      version: "1.1.0",
+      date: "2025-10-13",
+      changes: [
+        { type: "feature", description: "添加文件夾批量導入功能" },
+        { type: "feature", description: "支持文件名過濾關鍵字" },
+        { type: "improvement", description: "顯示日志來源文件名" },
+        { type: "improvement", description: "自動處理.log、.txt、.json格式文件" },
+      ],
+    },
+    {
+      version: "1.0.0",
+      date: "2025-10-13",
+      changes: [
+        { type: "feature", description: "創建專業的Dashboard系統" },
+        { type: "feature", description: "實現Log Reviewer核心功能" },
+        { type: "feature", description: "支持JSON文件上傳和解析" },
+        { type: "feature", description: "支持{events: [...]}格式解析" },
+        { type: "feature", description: "解析AWS CloudWatch日志格式" },
+        { type: "feature", description: "實現日志搜索和過濾功能" },
+        { type: "feature", description: "實現消息折疊功能" },
+        { type: "feature", description: "顯示日志統計信息" },
+      ],
+    },
+  ],
+}
+

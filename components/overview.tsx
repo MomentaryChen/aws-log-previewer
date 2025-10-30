@@ -12,6 +12,7 @@ import {
   Info as InfoIcon,
 } from "@mui/icons-material"
 import type { LogEntry } from "@/lib/log-parser"
+import { versionData } from "@/lib/version-data"
 
 interface OverviewProps {
   logs: LogEntry[]
@@ -372,57 +373,36 @@ export default function Overview({ logs }: OverviewProps) {
                   版本更新記錄
                 </Typography>
               </Box>
-              <Chip label="v1.5.0" sx={{ bgcolor: "#10b98120", color: "#10b981", fontWeight: 700 }} />
+              <Chip label={`v${versionData.currentVersion}`} sx={{ bgcolor: "#10b98120", color: "#10b981", fontWeight: 700 }} />
             </Box>
 
             <Card sx={{ flex: 1, overflow: "auto" }}>
               <CardContent>
                 <Stack spacing={2}>
-                  <Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                      <Chip label="最新" size="small" color="success" />
-                      <Typography variant="subtitle1" fontWeight={700}>
-                        v1.5.0
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        2025-01-15
-                      </Typography>
+                  {versionData.versionHistory.slice(0, 3).map((version, index) => (
+                    <Box key={version.version}>
+                      {index > 0 && <Divider sx={{ mb: 2 }} />}
+                      <Box>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                          {index === 0 && <Chip label="最新" size="small" color="success" />}
+                          <Typography variant="subtitle1" fontWeight={700}>
+                            v{version.version}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {version.date}
+                          </Typography>
+                        </Box>
+                        <Typography variant="body2" color="text.secondary" component="div">
+                          {version.changes.slice(0, 2).map((change, changeIndex) => (
+                            <span key={changeIndex}>
+                              • {change.description}
+                              {changeIndex < Math.min(version.changes.length, 2) - 1 && <br />}
+                            </span>
+                          ))}
+                        </Typography>
+                      </Box>
                     </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      • 添加版本日誌功能
-                      <br />• 優化Overview頁面布局
-                    </Typography>
-                  </Box>
-                  <Divider />
-                  <Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                      <Typography variant="subtitle1" fontWeight={700}>
-                        v1.4.0
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        2025-01-14
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      • 添加高級日誌功能
-                      <br />• 支持正則表達式搜索
-                    </Typography>
-                  </Box>
-                  <Divider />
-                  <Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                      <Typography variant="subtitle1" fontWeight={700}>
-                        v1.3.0
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        2025-01-13
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      • 改進分析圖表UI/UX
-                      <br />• 添加渐变背景效果
-                    </Typography>
-                  </Box>
+                  ))}
                 </Stack>
               </CardContent>
             </Card>

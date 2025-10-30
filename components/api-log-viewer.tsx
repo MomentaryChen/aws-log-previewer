@@ -16,7 +16,7 @@ import {
   Grid,
   Paper,
 } from "@mui/material"
-import { CloudDownload, Info, Schedule, Storage } from "@mui/icons-material"
+import { CloudDownload, Info, Schedule, Storage, Refresh } from "@mui/icons-material"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
 import type { LogEntry } from "@/lib/log-parser"
 import { buildListNamespacesUrl, buildListPodsUrl, buildPodContainersUrl } from "@/lib/k8s-admin"
@@ -87,6 +87,8 @@ export default function ApiLogViewer() {
   const [relativeRange, setRelativeRange] = useState<string>("30m")
   const searchParams = useSearchParams()
   const USE_K8S_PROXY = true
+  const [showAllLogs, setShowAllLogs] = useState(false)
+  const [showAllLogsWithoutFilter, setShowAllLogsWithoutFilter] = useState(false)
 
   // 將Date格式化為 datetime-local 可用字串 (yyyy-MM-ddTHH:mm)
   const formatForInput = (date: Date) => {
@@ -103,12 +105,14 @@ export default function ApiLogViewer() {
   const applyRelativeRange = (range: string) => {
     const now = new Date()
     let from = new Date(now)
-    if (range === "24h") from = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+    if (range === "3d") from = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000)
+    else if (range === "24h") from = new Date(now.getTime() - 24 * 60 * 60 * 1000)
     else if (range === "6h") from = new Date(now.getTime() - 6 * 60 * 60 * 1000)
     else if (range === "1h") from = new Date(now.getTime() - 1 * 60 * 60 * 1000)
     else if (range === "30m") from = new Date(now.getTime() - 30 * 60 * 1000)
     else if (range === "15m") from = new Date(now.getTime() - 15 * 60 * 1000)
     else if (range === "5m") from = new Date(now.getTime() - 5 * 60 * 1000)
+    else if (range === "1m") from = new Date(now.getTime() - 1 * 60 * 1000)
     
     setStartTime(formatForInput(from))
     setEndTime(formatForInput(now))
@@ -136,27 +140,28 @@ export default function ApiLogViewer() {
   }, [searchParams])
 
   // 載入 Namespaces
-  useEffect(() => {
-    const loadNamespaces = async () => {
-      setNsLoading(true)
-      try {
-        const res = await fetch(buildListNamespacesUrl(), { cache: "no-store" })
-        if (res.ok) {
-          const body: any = await res.json()
-          const items: string[] = (body?.namespaces ?? body?.items ?? [])
-            .map((n: any) => n?.objectMeta?.name || n?.metadata?.name)
-            .filter(Boolean)
-          setNamespaces(items)
-          // 若目前 namespace 空或不在清單，預設第一個
-          if (items.length > 0 && (!namespace || !items.includes(namespace))) {
-            setNamespace(items[0])
-          }
+  const loadNamespaces = async () => {
+    setNsLoading(true)
+    try {
+      const res = await fetch(buildListNamespacesUrl(), { cache: "no-store" })
+      if (res.ok) {
+        const body: any = await res.json()
+        const items: string[] = (body?.namespaces ?? body?.items ?? [])
+          .map((n: any) => n?.objectMeta?.name || n?.metadata?.name)
+          .filter(Boolean)
+        setNamespaces(items)
+        // 若目前 namespace 空或不在清單，預設第一個
+        if (items.length > 0 && (!namespace || !items.includes(namespace))) {
+          setNamespace(items[0])
         }
-      } catch {}
-      finally {
-        setNsLoading(false)
       }
+    } catch {}
+    finally {
+      setNsLoading(false)
     }
+  }
+
+  useEffect(() => {
     loadNamespaces()
     // 僅在初始化時載入一次
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -309,20 +314,39 @@ export default function ApiLogViewer() {
     if (logs.length > 0) {
       const filtered = applyFilters(logs)
       setFilteredLogs(filtered)
-      // 重置懒加载状态
-      setDisplayedLogs(filtered.slice(0, 50)) // 初始显示50条
-      setHasMore(filtered.length > 50)
+      // 如果 showAllLogsWithoutFilter 为 true，显示所有原始日志（不应用过滤）
+      if (showAllLogsWithoutFilter) {
+        setDisplayedLogs([...logs]) // 显示所有原始日志，不应用过滤
+        setHasMore(false)
+        setShowAllLogsWithoutFilter(false) // 重置标志
+        // 延迟滚动到底部，确保 DOM 已更新
+        setTimeout(() => {
+          scrollToBottom()
+        }, 100)
+      } else if (showAllLogs) {
+        setDisplayedLogs(filtered) // 显示所有过滤后的日志
+        setHasMore(false)
+        setShowAllLogs(false) // 重置标志
+        // 延迟滚动到底部，确保 DOM 已更新
+        setTimeout(() => {
+          scrollToBottom()
+        }, 100)
+      } else {
+        // 重置懒加载状态
+        setDisplayedLogs(filtered.slice(0, 100)) // 初始显示100条
+        setHasMore(filtered.length > 100)
+      }
       setLoadMore(false)
     }
-  }, [logs, levelFilter, debouncedKeyword, startTime, endTime])
+  }, [logs, levelFilter, debouncedKeyword, startTime, endTime, showAllLogs, showAllLogsWithoutFilter])
 
   // 懒加载更多数据
   useEffect(() => {
     if (loadMore && hasMore) {
       const currentLength = displayedLogs.length
-      const nextBatch = filteredLogs.slice(currentLength, currentLength + 50)
+      const nextBatch = filteredLogs.slice(currentLength, currentLength + 100)
       setDisplayedLogs(prev => [...prev, ...nextBatch])
-      setHasMore(currentLength + 50 < filteredLogs.length)
+      setHasMore(currentLength + 100 < filteredLogs.length)
       setLoadMore(false)
     }
   }, [loadMore, hasMore, filteredLogs, displayedLogs.length])
@@ -338,15 +362,61 @@ export default function ApiLogViewer() {
     }
   }
   const jumpToNow = async () => {
+    // 需要必填 namespace/pod/container
+    if (!namespace || !pod || !container) {
+      setError("請先選擇 Namespace、Pod、Container 後再查詢")
+      return
+    }
+
+    // 直接設置參數以獲取最新日誌
     setLogFilePosition("end")
     setReferenceTimestamp("newest")
-    setReferenceLineNum("0")
+    setReferenceLineNum("-1")
     setPrevious(false)
     const step = Math.max(1, parseInt(stepSize || "4096", 10))
     setOffsetFrom("0")
     setOffsetTo(String(step))
-    await handleFetchLogs()
-    scrollToBottom()
+
+    // 構建 URL 並直接獲取最新日誌（不等待狀態更新）
+    const finalBaseUrl = `/api/k8s/api/v1/log/${encodeURIComponent(namespace)}/${encodeURIComponent(pod)}/${encodeURIComponent(container)}`
+    setBaseUrl(finalBaseUrl)
+
+    setLoading(true)
+    setError(null)
+
+    try {
+      const baseOrigin = typeof window !== 'undefined' ? window.location.origin : ''
+      const fullUrl = new URL(
+        finalBaseUrl.startsWith("/") ? `${baseOrigin}${finalBaseUrl}` : finalBaseUrl
+      )
+      // 使用最新參數
+      fullUrl.searchParams.set("logFilePosition", "end")
+      fullUrl.searchParams.set("referenceTimestamp", "newest")
+      fullUrl.searchParams.set("referenceLineNum", "-1")
+      fullUrl.searchParams.set("offsetFrom", "0")
+      fullUrl.searchParams.set("offsetTo", String(step))
+      fullUrl.searchParams.set("previous", "false")
+
+      const response = await fetch(fullUrl.toString(), { method: "GET" })
+      if (!response.ok) {
+        const errText = await response.text()
+        let hint = ""
+        if (response.status === 401 || response.status === 403) hint = "\n提示：請確認服務端 K8S_ADMIN_COOKIE 是否有效。"
+        if (response.status === 416) hint = "\n提示：offset 範圍不合法，請調整 offsetFrom/offsetTo 或步進大小。"
+        if (response.status === 429) hint = "\n提示：請求過於頻繁，請降低輪詢頻率。"
+        throw new Error(`API請求失敗: ${response.status} ${response.statusText}\n${errText}${hint}`)
+      }
+      await handleResponseParsing(response)
+      // 设置标志，直接显示所有原始日志（不应用过滤）
+      setShowAllLogsWithoutFilter(true)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "未知錯誤")
+      setApiResponse(null)
+      setLogs([])
+      setFilteredLogs([])
+    } finally {
+      setLoading(false)
+    }
   }
   async function handleResponseParsing(response: Response) {
     // 按content-type解析
@@ -486,34 +556,6 @@ export default function ApiLogViewer() {
     }
   }
 
-  // 上一段/下一段：依步進調整 offset
-  const jumpByStep = (direction: "prev" | "next") => {
-    try {
-      const step = Math.max(1, parseInt(stepSize || "4096", 10))
-      const from = Math.max(0, parseInt(offsetFrom || "0", 10))
-      const to = Math.max(from, parseInt(offsetTo || "0", 10))
-      const width = Math.max(1, to - from)
-      const delta = step || width
-      const currentPage = Math.max(1, Math.floor(to / (delta)))
-      const targetPage = direction === "next" ? currentPage + 1 : Math.max(1, currentPage - 1)
-      const newFrom = (targetPage - 1) * delta
-      const newTo = newFrom + delta
-      setOffsetFrom(String(newFrom))
-      setOffsetTo(String(newTo))
-    } catch {}
-  }
-
-  const jumpToPage = (pageNumber: number) => {
-    try {
-      const step = Math.max(1, parseInt(stepSize || "4096", 10))
-      const p = Math.max(1, Math.floor(pageNumber))
-      const newFrom = (p - 1) * step
-      const newTo = newFrom + step
-      setOffsetFrom(String(newFrom))
-      setOffsetTo(String(newTo))
-    } catch {}
-  }
-
   // 追尾輪詢
   useEffect(() => {
     if (!tailMode) return
@@ -566,28 +608,39 @@ export default function ApiLogViewer() {
           <Grid container spacing={2}>
             {/* Namespace / Pod / Container 快速拼接（下拉選單） */}
             <Grid item xs={12} md={4}>
-              <TextField
-                fullWidth
-                select
-                label="Namespace"
-                value={namespace}
-                onChange={(e) => {
-                  setNamespace(e.target.value)
-                  // 切換 namespace 時清空下游
-                  setPod("")
-                  setContainer("")
-                }}
-                disabled={loading || nsLoading}
-                SelectProps={{ native: true }}
-                helperText={nsLoading ? "載入 namespaces..." : undefined}
-              >
-                <option value="" disabled>
-                  選擇 Namespace
-                </option>
-                {(namespaces.length > 0 ? namespaces : (namespace ? [namespace] : [])).map((n) => (
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </TextField>
+              <Box sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}>
+                <TextField
+                  fullWidth
+                  select
+                  label="Namespace"
+                  value={namespace}
+                  onChange={(e) => {
+                    setNamespace(e.target.value)
+                    // 切換 namespace 時清空下游
+                    setPod("")
+                    setContainer("")
+                  }}
+                  disabled={loading || nsLoading}
+                  SelectProps={{ native: true }}
+                  helperText={nsLoading ? "載入 namespaces..." : undefined}
+                >
+                  <option value="" disabled>
+                    選擇 Namespace
+                  </option>
+                  {(namespaces.length > 0 ? namespaces : (namespace ? [namespace] : [])).map((n) => (
+                    <option key={n} value={n}>{n}</option>
+                  ))}
+                </TextField>
+                <Button
+                  variant="outlined"
+                  onClick={loadNamespaces}
+                  disabled={loading || nsLoading}
+                  sx={{ minWidth: 48, height: 56 }}
+                  title="刷新 Namespace"
+                >
+                  <Refresh />
+                </Button>
+              </Box>
             </Grid>
             <Grid item xs={12} md={4}>
               <TextField
@@ -724,35 +777,6 @@ export default function ApiLogViewer() {
 
             <Grid item xs={12}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
-                <Button variant="outlined" onClick={() => jumpByStep("prev")} disabled={loading}>
-                  上一段
-                </Button>
-                <Button variant="outlined" onClick={() => jumpByStep("next")} disabled={loading}>
-                  下一段
-                </Button>
-                <TextField
-                  size="small"
-                  label="頁碼"
-                  type="number"
-                  inputProps={{ min: 1 }}
-                  sx={{ width: 120 }}
-                  value={(() => {
-                    try {
-                      const step = Math.max(1, parseInt(stepSize || "4096", 10))
-                      const to = Math.max(0, parseInt(offsetTo || "0", 10))
-                      const page = Math.max(1, Math.ceil(to / step))
-                      return page
-                    } catch {
-                      return 1
-                    }
-                  })()}
-                  onChange={(e) => {
-                    const v = parseInt(e.target.value || "1", 10)
-                    if (!Number.isNaN(v)) jumpToPage(v)
-                  }}
-                  disabled={loading}
-                  helperText="以步進大小為頁寬"
-                />
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <input
                     type="checkbox"
@@ -953,12 +977,14 @@ export default function ApiLogViewer() {
                   }}
                   SelectProps={{ native: true }}
                 >
+                  <option value="3d">3d</option>
                   <option value="24h">24h</option>
                   <option value="6h">6h</option>
                   <option value="1h">1h</option>
                   <option value="30m">30m</option>
                   <option value="15m">15m</option>
                   <option value="5m">5m</option>
+                  <option value="1m">1m</option>
                 </TextField>
                 <TextField
                   size="small"
@@ -1017,11 +1043,6 @@ export default function ApiLogViewer() {
                       清除時間
                     </Button>
                   )}
-                </Box>
-                <Box>
-                  <Button size="small" variant="contained" onClick={jumpToNow} disabled={loading}>
-                    拉到現在
-                  </Button>
                 </Box>
               </Box>
             </Box>

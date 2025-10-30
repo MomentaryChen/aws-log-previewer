@@ -25,7 +25,7 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    if (currentPage === "K8s") {
+    if (currentPage === "K8s Deployments") {
       router.push("/k8s/deployments")
     }
   }, [currentPage, router])

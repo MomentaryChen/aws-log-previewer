@@ -13,6 +13,8 @@ It uses `awslocal logs filter-log-events` to fetch logs from LocalStack, exports
 - 📂 Export logs to a JSON file  
 - 💻 Intuitive web UI for fast browsing and search  
 - 🕵️ Filter and categorize logs across multiple services  
+- ☸️ K8s Dashboard API log viewer with real-time log streaming  
+- 📊 Analytics dashboard with charts and statistics  
 
 ---
 
@@ -75,6 +77,17 @@ After startup, open your browser at:
 
 Then import the `full-events-log.json` file in the UI.
 
+## 📄 Available Pages
+
+The application includes the following pages:
+
+- **Overview**: Dashboard overview with log statistics and recent updates
+- **Log Reviewer**: Main log viewing interface with advanced filtering and search
+- **API Log Viewer**: K8s Dashboard API log viewer with real-time streaming, namespace/pod/container selection, and time range filtering
+- **K8s Deployments**: View Kubernetes deployments, pods, and container logs
+- **Analytics**: Data analysis dashboard with charts and statistics
+- **Version Log**: Application version history and changelog
+
 📸 Screenshots
 
 ![import-logs](./img/import-logs.png)
@@ -93,6 +106,10 @@ Then import the `full-events-log.json` file in the UI.
 
 ![api-log-viewer](./img/api-log-viewer2.png)
 
+![k8s-deployments](./img/k8s-deployments.png)
+
+![k8s-deployments](./img/k8s-deployments.png)
+
 # 🪶 aws-log-reviewer
 
 `aws-log-reviewer` 是一個用於 **在本地環境中預覽 AWS CloudWatch Logs** 的工具。  
@@ -106,6 +123,8 @@ Then import the `full-events-log.json` file in the UI.
 - 📂 支援將 log 匯出成 JSON 檔案  
 - 💻 直覺式網頁 UI，快速瀏覽與搜尋 log  
 - 🕵️ 支援多服務 log 過濾與分類顯示  
+- ☸️ K8s Dashboard API 日誌查看器，支援即時日誌串流  
+- 📊 分析儀表板，提供圖表和統計數據  
 
 ---
 
@@ -168,6 +187,17 @@ npm run start
 
 即可在 UI 中匯入的 full-events-log.json 檔案內容。
 
+## 📄 可用頁面
+
+應用程式包含以下頁面：
+
+- **Overview（總覽）**: 儀表板總覽，顯示日誌統計和最新更新
+- **Log Reviewer（日誌審查）**: 主要日誌查看介面，支援進階過濾和搜尋
+- **API Log Viewer（API 日誌查看器）**: K8s Dashboard API 日誌查看器，支援即時串流、Namespace/Pod/Container 選擇和時間範圍過濾
+- **K8s Deployments（K8s 部署）**: 查看 Kubernetes 部署、Pods 和容器日誌
+- **Analytics（分析）**: 數據分析儀表板，提供圖表和統計數據
+- **Version Log（版本日誌）**: 應用程式版本歷史和更新日誌
+
 📸 範例截圖
 
 ![import-logs](./img/import-logs.png)
@@ -185,3 +215,5 @@ npm run start
 ![api-log-viewer](./img/api-log-viewer1.png)
 
 ![api-log-viewer](./img/api-log-viewer2.png)
+
+![k8s-deployments](./img/k8s-deployments.png)

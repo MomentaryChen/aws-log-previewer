@@ -8,13 +8,13 @@ import { useRouter } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export default function DeploymentsPage() {
-	const [currentPage, setCurrentPage] = useState("K8s");
+	const [currentPage, setCurrentPage] = useState("K8s Deployments");
 	const router = useRouter();
 
 	const handlePageChange = useCallback(
 		(page: string) => {
 			setCurrentPage(page);
-			if (page === "K8s") {
+			if (page === "K8s Deployments") {
 				router.push("/k8s/deployments");
 				return;
 			}
